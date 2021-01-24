@@ -7,14 +7,14 @@ var express = require('express');
 // ====================================================
 // Create server named "app".
 var app = express();
-// Listen for designated PORT.
+// Get designated PORT from remote server, or default.
 var PORT = process.env.PORT || 3000;
 // Prepare for parsing urlencoded data and JSON data.
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 
-// ROUTER
+// ROUTERS
 // ====================================================
 // Route server to api data.
 require("./routes/apiRoutes")(app);
