@@ -1,6 +1,8 @@
 // LOAD DATA
 // ====================================================
-const notes = require("../db/db.json")
+const fs = require('fs');
+const notes = require("../db/db.json");
+const uuid = require("uuid");
 
 
 // ROUTING
@@ -16,24 +18,24 @@ module.exports = function(app) {
     // IF note exists...
     if (found) {
       // Respond with note.
-      res.json(notes.filter(note => note.id === parseInt(req.params.id)))
+      res.json(notes.filter(note => note.id === parseInt(req.params.id)));
     } else {
       // ELSE change status code and respond with error message.
       res.status(400).json({ msg: "Note not found"});
     }
-  })
+  });
 
   // ADD NEW NOTE
   app.post("/api/notes", (req, res) => {
     // Create a new note.
     const newNote = {
-      id: notes.length + 1,
+      id: uuid.v4(),
       title: req.body.title,
       text: req.body.text
-    }
+    };
     notes.push(newNote); // Add new note to notes array.
-    res.json(notes) // Respond with all notes, including new.
-  })
+    res.json(notes); // Respond with all notes, including new.
+  });
 
   // MODIFY NOTE
   app.put("/api/notes/:id", (req, res) => {
