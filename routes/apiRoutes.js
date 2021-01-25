@@ -56,7 +56,23 @@ module.exports = function(app) {
   })
 
   // DELETE NOTE
-  
+  app.delete("/api/notes/:id", (req, res) => {
+    // Find note in array.
+    const found = notes.some(note => note.id === parseInt(req.params.id));
+    // IF note exists...
+    if (found) {
+      const updNote = req.body; // Assign updated data to variable.
+      notes.forEach(note => { // Loop through notes array.
+        if (note.id === parseInt(req.params.id)) { // IF note found THEN...
+          // Respond with all notes EXCEPT the one deleted.
+          res.json(notes.filter(note => note.id !== parseInt(req.params.id)))
+        } else {
+          // ELSE change status code and respond with error message.
+          res.status(400).json({ msg: "Note not found"});
+        }
+      })
+    }
+  })
 }
 
 
