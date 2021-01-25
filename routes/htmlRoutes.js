@@ -12,6 +12,6 @@ module.exports = function(app) {
   });
   // Default route if no matches.
   app.get("*", function(req, res) {
-    res.sendFile(path.join(__driname, "../public/index.html"))
+    res.sendFile(path.join(__dirname, "../public/index.html"))
   });
 }

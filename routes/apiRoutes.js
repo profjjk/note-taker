@@ -1,22 +1,36 @@
 // LOAD DATA
 // ====================================================
-// Get JSON data from db.json.
-var noteData = require("../db/db.json")
+var notes = require("./db/db.json")
 
 
 // ROUTING
 // ====================================================
 module.exports = function(app) {
-  // Route API GET requests to data.
-  app.get("/api/notes", function(req, res) {
-    // Convert data to JSON string.
-    res.json(noteData);
+  // GET ALL NOTES
+  app.get("/api/notes", (req, res) => res.json(notes));
+
+  // GET SINGLE NOTE
+  app.get("/api/notes/:id", (req, res) => {
+    // Find note in array.
+    const found = notes.some(note => note.id === parseInt(req.params.id));
+    // IF note exists...
+    if (found) {
+      // Respond with note.
+      res.json(notes.filter(note => note.id === parseInt(req.params.id)))
+    } else {
+      // ELSE change status code and respond with error message.
+      res.status(400).json({ msg: "Note not found"});
+    }
   })
-  // Route API POST requests to data.
-  app.post("/api/notes", function(req, res) {
-    // Capture user input from page and add to data array.
-    noteData.push(req.body);
-    // ????
-    res.json(true);
-  })
+  
+  // ADD NEW NOTE
+
+  // MODIFY NOTE
+
+  // DELETE NOTE
 }
+
+
+
+
+
