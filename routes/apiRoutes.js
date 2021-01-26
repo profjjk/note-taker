@@ -3,6 +3,7 @@
 const fs = require('fs');
 const notes = require("../db/db.json");
 const uuid = require("uuid");
+const path = require("path")
 
 
 // ROUTING
@@ -13,30 +14,27 @@ module.exports = function(app) {
 
   // ADD NEW NOTE
   app.post("/api/notes", (req, res) => {
-    // Create a new note.
     const newNote = {
       id: uuid.v4(),
       title: req.body.title,
       text: req.body.text
     };
-    notes.push(newNote); // Add new note to notes array.
-    res.json(notes); // Respond with all notes, including new.
+    notes.push(newNote);
+    fs.writeFileSync(path.join(__dirname, "/../db/db.json"), JSON.stringify(notes));
+    res.json(notes);
   });
 
   // MODIFY NOTE
   app.put("/api/notes/:id", (req, res) => {
-    // Find note in array.
-    const found = notes.some(note => note.id === parseInt(req.params.id));
-    // IF note exists...
+    const found = notes.some(note => note.id === req.params.id);
     if (found) {
-      const updNote = req.body; // Assign updated data to variable.
-      notes.forEach(note => { // Loop through notes array.
-        if (note.id === parseInt(req.params.id)) { // IF note found THEN...
-          note.title = updNote.title ? updNote.title : note.title; // Change title IF updated.
-          note.text = updNote.text ? updNote.text : note.text; // Change text IF updated.
-          res.json(note); // Respond with updated note.
+      const updNote = req.body;
+      notes.forEach(note => {
+        if (note.id === req.params.id) {
+          note.title = updNote.title ? updNote.title : note.title;
+          note.text = updNote.text ? updNote.text : note.text;
+          res.json(note);
         } else {
-          // ELSE change status code and respond with error message.
           res.status(400).json({ msg: "Note not found"});
         }
       })
@@ -45,25 +43,15 @@ module.exports = function(app) {
 
   // DELETE NOTE
   app.delete("/api/notes/:id", (req, res) => {
-    // Find note in array.
-    const found = notes.some(note => note.id === parseInt(req.params.id));
-    // IF note exists...
+    const found = notes.some(note => note.id === req.params.id);
     if (found) {
-      const updNote = req.body; // Assign updated data to variable.
-      notes.forEach(note => { // Loop through notes array.
-        if (note.id === parseInt(req.params.id)) { // IF note found THEN...
-          // Respond with all notes EXCEPT the one deleted.
-          res.json(notes.filter(note => note.id !== parseInt(req.params.id)))
-        } else {
-          // ELSE change status code and respond with error message.
-          res.status(400).json({ msg: "Note not found"});
-        }
-      })
+      const updNotes = notes.filter(note => note.id !== req.params.id)
+      console.log(updNotes);
+      fs.writeFileSync(path.join(__dirname, "/../db/db.json"), JSON.stringify(updNotes));
+      res.json(updNotes);
+    } else {
+      console.log("note not found")
+      res.status(400).json({ msg: "Note not found"});
     }
   })
 }
-
-
-
-
-
