@@ -10,7 +10,9 @@ const path = require("path")
 // ====================================================
 module.exports = function(app) {
   // GET ALL NOTES
-  app.get("/api/notes", (req, res) => res.json(notes));
+  app.get("/api/notes", (req, res) => {
+    res.json(JSON.parse(fs.readFileSync(path.join(__dirname, "/../db/db.json"), 'utf-8')));
+  });
 
   // ADD NEW NOTE
   app.post("/api/notes", (req, res) => {
@@ -23,23 +25,6 @@ module.exports = function(app) {
     fs.writeFileSync(path.join(__dirname, "/../db/db.json"), JSON.stringify(notes));
     res.json(notes);
   });
-
-  // MODIFY NOTE
-  app.put("/api/notes/:id", (req, res) => {
-    const found = notes.some(note => note.id === req.params.id);
-    if (found) {
-      const updNote = req.body;
-      notes.forEach(note => {
-        if (note.id === req.params.id) {
-          note.title = updNote.title ? updNote.title : note.title;
-          note.text = updNote.text ? updNote.text : note.text;
-          res.json(note);
-        } else {
-          res.status(400).json({ msg: "Note not found"});
-        }
-      })
-    }
-  })
 
   // DELETE NOTE
   app.delete("/api/notes/:id", (req, res) => {
