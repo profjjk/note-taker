@@ -1,11 +1,11 @@
 # Note Taker
 
 ## Table of Contents
-* [Project Summary](##project-summary)
-* [Technologies Used](##technologies-used)
-* [How to Access](##how-to-access)
-* [About Me](##about-me)
-* [Screenshots](##screenshots)
+* [Project Summary](#project-summary)
+* [Technologies Used](#technologies-used)
+* [How to Access](#how-to-access)
+* [About Me](#about-me)
+* [Screenshots](#screenshots)
 ---
 
 ## Project Summary
